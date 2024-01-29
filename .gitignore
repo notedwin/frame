@@ -1,0 +1,5 @@
+images/
+static/
+*.jpeg
+*.jpg
+.DS_Store
