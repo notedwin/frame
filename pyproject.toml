@@ -1,0 +1,22 @@
+[project]
+name = "inky-frame"
+version = "0.1.0"
+description = "rsp zero with inky frame"
+requires-python = ">=3.11"
+readme = "README.md"
+dependencies = []
+
+# without this, your rsp will crash lol
+[tool.uv]
+prerelease = "allow"
+concurrent-builds = 1
+concurrent-downloads = 1
+concurrent-installs = 1
+environments = ["sys_platform == 'linux'"]
+
+[[tool.uv.index]]
+# Optional name for the index.
+name = "piwheels"
+# Required URL for the index.
+url = "https://www.piwheels.org/simple"
+default = true

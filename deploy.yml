@@ -1,0 +1,77 @@
+---
+- name: Setup frame
+  hosts: "all"
+  become: true
+  tasks:
+    - name: Supress login message
+      ansible.builtin.file:
+        path: "/home/notedwin/.hushlogin"
+        modification_time: preserve
+        access_time: preserve
+        state: touch
+        mode: "0644"
+    # https://www.complete.org/installing-debian-backports-on-raspberry-pi/
+    - name: Add debian keyring download deb pkg
+      ansible.builtin.get_url:
+        url: "http://http.us.debian.org/debian/pool/main/d/debian-archive-keyring/debian-archive-keyring_2023.4_all.deb"
+        dest: "/tmp/debian-keyring.deb"
+
+    - name: Install debian keyring
+      ansible.builtin.apt:
+        deb: "/tmp/debian-keyring.deb"
+        state: present
+
+    - name: Add debian backports
+      ansible.builtin.apt_repository:
+        repo: "deb http://deb.debian.org/debian bookworm-backports main"
+        state: present
+
+    - name: Update and Upgrade
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: true
+
+    - name: Install from Backports
+      ansible.builtin.apt:
+        name:
+          - libheif-dev
+          - libheif1
+        default_release: bookworm-backports
+
+    - name: Install utils
+      ansible.builtin.apt:
+        name:
+          - curl
+          - python3
+          - python3-pip
+          - git
+          - tmux
+          - neovim
+          # piheif
+          - libjpeg-dev
+          - zlib1g-dev
+          # numpy piwheel
+          - libopenjp2-7
+          - libatlas-base-dev
+          - libgfortran5
+          - libopenblas0-pthread
+        update_cache: true
+
+    - name: Create src directory
+      ansible.builtin.file:
+        path: "/home/notedwin/src"
+        state: directory
+        mode: "0755"
+        owner: notedwin
+        group: notedwin
+
+    - name: Enable spi and i2c
+      ansible.builtin.shell: |
+        sudo raspi-config nonint do_spi 0
+        sudo raspi-config nonint do_i2c 0
+
+    - name: Modify boot config
+      ansible.builtin.lineinfile:
+        dest: "/boot/firmware/config.txt"
+        line: "dtoverlay=spi0-0cs"
+        state: present
