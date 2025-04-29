@@ -31,9 +31,9 @@ c = dotenv_values(".env")
 
 
 def pull_images():
-    url = "http://192.168.0.200:2283"
+    url = "http://192.168.0.220:2283"
     apikey = c["immich_api"]
-    albumid = "713e43d8-099a-4d5e-960e-29187669c709"  # frame
+    albumid = "c17bb978-9e6d-413a-8af5-9a41b9465b33"  # copy from url when accessing folder
 
     headers = {"Accept": "application/json", "x-api-key": apikey}
 

@@ -3,3 +3,4 @@ scraps/
 .DS_Store
 .env
 .python-version
+.ansible
