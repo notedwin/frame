@@ -16,7 +16,6 @@ inky = auto(ask_user=False, verbose=True)
 overlay = False
 saturation = 0.5
 
-image_folder = "/home/notedwin/src/images"
 overlay = None
 current_image = None
 original_image = None
@@ -33,7 +32,7 @@ c = dotenv_values(".env")
 def pull_images():
     url = "http://192.168.0.220:2283"
     apikey = c["immich_api"]
-    albumid = "c17bb978-9e6d-413a-8af5-9a41b9465b33"  # copy from url when accessing folder
+    albumid = "c17bb978-9e6d-413a-8af5-9a41b9465b33"  # in url
 
     headers = {"Accept": "application/json", "x-api-key": apikey}
 
@@ -84,8 +83,8 @@ def pull_images():
 
 
 def display():
-    random_image = random.choice(os.listdir(image_folder))
-    img = Image.open(os.path.join(image_folder, random_image)).convert("RGB")
+    random_image = random.choice(os.listdir("./images"))
+    img = Image.open(os.path.join("./images", random_image)).convert("RGB")
     img = img.rotate(90)
     img = ImageOps.fit(img, (inky.width, inky.height))
     inky.set_border(inky.RED)
@@ -94,6 +93,7 @@ def display():
 
 
 if __name__ == "__main__":
+    pull_images()
     schedule.every(60).seconds.do(display)
     schedule.every(60).minutes.do(pull_images)
 
